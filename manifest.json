@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Speed Controller",
+  "version": "1.4",
+  "description": "Extension controls Playback speed on YouTube.Sets default playback speed to 1.5x.\n Author: Deepak Sharma <deepak4career@gmail.com>",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.youtube.com/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "inject.js",
+        "control_panel.html"
+      ],
+      "matches": [
+        "*://www.youtube.com/*"
+      ]
+    }
+  ]
+}
