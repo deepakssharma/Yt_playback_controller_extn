@@ -4,6 +4,12 @@
 (function () {
     console.log("YouTube Player Speed Controller: Injected script loaded");
 
+    // Default settings
+    let config = {
+        lowSpeed: 1.0,
+        highSpeed: 1.5
+    };
+
     function getPlayer() {
         // 'movie_player' is the standard ID for the YouTube player object
         return document.getElementById('movie_player');
@@ -18,6 +24,15 @@
 
         if (event.data.type && (event.data.type === 'FROM_CONTENT_SCRIPT')) {
             const player = getPlayer();
+
+            // Handle Settings Update
+            if (event.data.command === 'updateSettings') {
+                config.lowSpeed = event.data.lowSpeed;
+                config.highSpeed = event.data.highSpeed;
+                console.log("YouTube Player Speed Controller: Settings updated", config);
+                return;
+            }
+
             if (!player) {
                 console.warn("YouTube Player Speed Controller: Player object not found");
                 return;
@@ -25,30 +40,30 @@
 
             console.log("YouTube Player Speed Controller: Received command", event.data.command);
 
-            switch (event.data.command) {
-                case 'playSpeed1':
-                    if (typeof player.playVideo === 'function') player.setPlaybackRate(1);
-                    break;
-                case 'playSpeed2':
-                    if (typeof player.playVideo === 'function') player.setPlaybackRate(1.5);
-                    break;
-                default:
-                    console.log("YouTube Player Speed Controller: Unknown command", event.data.command);
+            if (event.data.command === 'setSpeed') {
+                if (typeof player.playVideo === 'function') player.setPlaybackRate(event.data.speed);
+            } else {
+                console.log("YouTube Player Speed Controller: Unknown command", event.data.command);
             }
         }
     });
+
     document.addEventListener('yt-navigate-finish', () => {
         // Wait a moment for the new video element to load
         console.log("Inside yt-finish inject.js");
         setTimeout(() => {
             const video = document.querySelector('video');
             if (video) {
-                // Re-apply your custom speed or logic here
-                video.playbackRate = 1.5;
+                // Apply the High Speed by default (as per original logic logic)
+                // Note: The manifest description says "Sets default playback speed to 1.5x"
+                // So we use config.highSpeed here.
+                video.playbackRate = config.highSpeed;
                 console.log("YouTube Player Speed Controller: Initial Playback Speed:", video.playbackRate);
 
                 // Add listener for future play events
                 video.addEventListener('play', () => {
+                    // Optional: Enforce speed on play if needed, but usually initial set is enough.
+                    // Just logging for now as per previous request.
                     console.log("YouTube Player Speed Controller: Video Started/Resumed - Playback Speed:", video.playbackRate);
                 });
             }

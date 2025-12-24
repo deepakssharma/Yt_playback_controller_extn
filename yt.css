@@ -1,0 +1,145 @@
+/* Main Control Panel Container */
+#yt-speed-control-panel {
+    position: absolute;
+    top: 6px;
+    right: 234px;
+    z-index: 9999;
+    background-color: cornflowerblue;
+    padding: 10px;
+    border: 0px solid black;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: Calibri, sans-serif;
+    font-weight: bold;
+    color: yellow;
+}
+
+/* Text Labels */
+.yt-speed-text {
+    font-family: Calibri, sans-serif;
+    font-size: medium;
+    font-weight: bold;
+}
+
+/* Toggle Switch Container */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+/* Hide default checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The Slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #151616f5;
+    /* Updated color from source */
+    transition: .4s;
+    border-radius: 24px;
+}
+
+/* The Slider Handle (White Circle) */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: rgb(118, 228, 127);
+    /* Updated color from source */
+    transition: .4s;
+    border-radius: 50%;
+}
+
+/* Checked state (ON / 1.5X) - Slider Background */
+input:checked+.slider {
+    background-color: #000000;
+}
+
+/* Checked state (ON / 1.5X) - Handle Position */
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+/* Settings Button (Info Icon) */
+#btn-settings {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background-color: cornflowerblue;
+    color: white;
+    font-family: Calibri, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+#btn-settings:hover {
+    background-color: #4a86e8;
+    transform: scale(1.1);
+}
+
+/* Settings Page Styles */
+body {
+    font-family: Calibri, sans-serif;
+    padding: 20px;
+}
+
+.setting {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="number"] {
+    padding: 5px;
+    width: 100px;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #4a86e8;
+}
+
+#status {
+    margin-top: 10px;
+    color: green;
+    font-weight: bold;
+    display: none;
+}

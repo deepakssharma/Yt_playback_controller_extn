@@ -19,19 +19,50 @@ fetch(chrome.runtime.getURL('control_panel.html'))
         container.innerHTML = html;
         document.body.appendChild(container);
 
-        // Add event listener to the toggle switch
-        const speedToggleBtn = document.getElementById('btn-speed-toggle');
-        if (speedToggleBtn) {
-            speedToggleBtn.addEventListener('change', () => {
-                if (speedToggleBtn.checked) {
-                    // Checked = 1.5X
-                    window.postMessage({ type: 'FROM_CONTENT_SCRIPT', command: 'playSpeed2' }, '*');
-                } else {
-                    // Unchecked = 1X
-                    window.postMessage({ type: 'FROM_CONTENT_SCRIPT', command: 'playSpeed1' }, '*');
-                }
-            });
-        }
+        // Fetch settings and initialize
+        chrome.storage.sync.get({
+            lowSpeed: 1.0,
+            highSpeed: 1.5
+        }, function (items) {
+            const lowSpeed = items.lowSpeed;
+            const highSpeed = items.highSpeed;
+
+            // Update UI Labels
+            const lowLabel = document.getElementById('speed-low-label');
+            const highLabel = document.getElementById('speed-high-label');
+            if (lowLabel) lowLabel.innerText = lowSpeed + 'X';
+            if (highLabel) highLabel.innerText = highSpeed + 'X';
+
+            // Send config to inject.js
+            window.postMessage({
+                type: 'FROM_CONTENT_SCRIPT',
+                command: 'updateSettings',
+                lowSpeed: lowSpeed,
+                highSpeed: highSpeed
+            }, '*');
+
+            // Add event listener to the toggle switch
+            const speedToggleBtn = document.getElementById('btn-speed-toggle');
+            if (speedToggleBtn) {
+                speedToggleBtn.addEventListener('change', () => {
+                    if (speedToggleBtn.checked) {
+                        // High speed
+                        window.postMessage({ type: 'FROM_CONTENT_SCRIPT', command: 'setSpeed', speed: highSpeed }, '*');
+                    } else {
+                        // Low speed
+                        window.postMessage({ type: 'FROM_CONTENT_SCRIPT', command: 'setSpeed', speed: lowSpeed }, '*');
+                    }
+                });
+            }
+
+            // Add event listener to settings button
+            const settingsBtn = document.getElementById('btn-settings');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    window.open(chrome.runtime.getURL('settings.html'), '_blank');
+                });
+            }
+        });
     })
     .catch(err => console.error('Failed to load control panel:', err));
 
